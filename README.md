@@ -1,6 +1,6 @@
 # AWS-Gists
 
-My personal collection of solutions to day-to-day I tasks in AWS
+My personal collection of solutions to day-to-day tasks in AWS.
 
 ## Getting Started
 
@@ -24,4 +24,4 @@ $ aws configure
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License.
