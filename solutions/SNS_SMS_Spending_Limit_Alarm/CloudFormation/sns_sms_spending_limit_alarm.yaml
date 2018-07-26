@@ -1,0 +1,55 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Enables SMS Spending Limit alarm"
+
+Parameters:
+  AccountName:
+    Type: String
+    Description: "The name on this account"
+    Default: "My account"
+  MaxMonthlyExpenseInDollars:
+    Type: Number
+    Description: >
+      The maximum dollars to spend in the account per month before an
+      alarm is triggered.
+    Default: 1
+  RecipientEmailAddress:
+    Type: String
+    Description: >
+      The email recipient of the SMS Spending alarm.
+
+Resources:
+  SNSSMSSpendingAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: !Sub >
+        "Alarm if AWS SMS spending is over $${MaxMonthlyExpenseInDollars}"
+      Namespace: AWS/SNS
+      MetricName: SMSMonthToDateSpentUSD
+      Statistic: Average
+      Period: '300'
+      EvaluationPeriods: '2'
+      Threshold:
+        Ref: "MaxMonthlyExpenseInDollars"
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+      - Ref: "SNSSMSSpendingLimitTopic"
+      InsufficientDataActions:
+      - Ref: "SNSSMSSpendingLimitTopic"
+
+  SNSSMSSpendingLimitTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: !Sub "SMS Spending Alert for ${AccountName} Account"
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref RecipientEmailAddress
+Outputs:
+  SNSSMSSpendingAlarmArn:
+    Description: "ARN of the Cloudwatch SMS Spending Alarm"
+    Value: !Ref SNSSMSSpendingAlarm
+  SNSSMSSpendingLimitTopicArn:
+    Description: "ARN of the SNS topic receiving sms spending alerts"
+    Value: !Ref SNSSMSSpendingLimitTopic
+    Export:
+      Name: "sms-spending-alerts:sns:arn"
