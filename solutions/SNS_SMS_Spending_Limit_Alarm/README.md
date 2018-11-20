@@ -13,7 +13,7 @@ Using the AWS CLI this is easy:
 
 I think is easier to just have a Cloudformation template to do this, which the template in the CFN folder does.
 
-###To launch the stack:
+### To launch the stack:
 
 ![Create Stack Video](../../assets/SNS_Alarm_CFN_video.gif)
 
